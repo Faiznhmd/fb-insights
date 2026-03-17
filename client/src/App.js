@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const API = 'https://fb-insights.onrender.com';
+const API = 'https://fb-insights-1.onrender.com';
 
 function App() {
   const [token, setToken] = useState('');
