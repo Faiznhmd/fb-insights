@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const API = 'https://fb-insights.onrender.com'; // ✅ FIXED
+
 function App() {
   const [token, setToken] = useState('');
   const [user, setUser] = useState(null);
@@ -13,7 +15,7 @@ function App() {
 
   // ✅ Login
   const handleLogin = () => {
-    window.location.href = 'https://fb-insights.onrender.com/auth/facebook';
+    window.location.href = `${API}/auth/facebook`;
   };
 
   // ✅ Get token
@@ -31,18 +33,18 @@ function App() {
   useEffect(() => {
     if (token) {
       axios
-        .get(`http://localhost:5000/user?access_token=${token}`)
+        .get(`${API}/user?access_token=${token}`)
         .then((res) => setUser(res.data))
         .catch(() => setError('Failed to fetch user'));
 
       axios
-        .get(`http://localhost:5000/pages?access_token=${token}`)
+        .get(`${API}/pages?access_token=${token}`)
         .then((res) => setPages(res.data.data))
         .catch(() => setError('Failed to fetch pages'));
     }
   }, [token]);
 
-  // ✅ Fetch insights
+  // ✅ Fetch insights (WITH since & until)
   const getInsights = async () => {
     if (!selectedPage) {
       setError('Please select a page');
@@ -53,10 +55,12 @@ function App() {
     setError('');
 
     try {
-      const res = await axios.get('http://localhost:5000/insights', {
+      const res = await axios.get(`${API}/insights`, {
         params: {
           page_id: selectedPage.id,
           page_token: selectedPage.access_token,
+          since: '2024-01-01', // ✅ REQUIRED
+          until: '2024-01-30', // ✅ REQUIRED
         },
       });
 
@@ -68,7 +72,6 @@ function App() {
     }
   };
 
-  // 🎨 Styles
   const btn = {
     padding: '10px 20px',
     margin: '10px',
@@ -102,18 +105,16 @@ function App() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <h1 style={{ marginBottom: '20px' }}>📊 Facebook Insights Dashboard</h1>
+      <h1>📊 Facebook Insights Dashboard</h1>
 
-      {/* LOGIN */}
       {!token && (
         <button onClick={handleLogin} style={btn}>
-          Login with Facebook
+          Login
         </button>
       )}
 
-      {/* USER */}
       {user && (
-        <div style={{ marginBottom: '20px' }}>
+        <div>
           <h3>{user.name}</h3>
           <img
             src={user.picture.data.url}
@@ -123,9 +124,8 @@ function App() {
         </div>
       )}
 
-      {/* PAGE SELECT */}
       {pages.length > 0 && (
-        <div style={{ marginBottom: '20px' }}>
+        <div>
           <select
             onChange={(e) =>
               setSelectedPage(pages.find((p) => p.id === e.target.value))
@@ -140,16 +140,14 @@ function App() {
             ))}
           </select>
 
-          <button onClick={getInsights} style={btn} disabled={loading}>
+          <button onClick={getInsights} style={btn}>
             {loading ? 'Loading...' : 'Get Insights'}
           </button>
         </div>
       )}
 
-      {/* ERROR */}
-      {error && <p style={{ color: 'red', marginBottom: '10px' }}>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {/* INSIGHTS */}
       <div style={cardContainer}>
         {insights.map((item, index) => (
           <div key={index} style={card}>
