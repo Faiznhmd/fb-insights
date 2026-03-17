@@ -55,8 +55,8 @@ function App() {
         params: {
           page_id: selectedPage.id,
           page_token: selectedPage.access_token,
-          since: '2024-01-01', // ✅ REQUIRED
-          until: '2024-01-30', // ✅ REQUIRED
+          since: '2024-01-01',
+          until: '2024-01-30',
         },
       });
 
