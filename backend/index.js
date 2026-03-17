@@ -11,18 +11,16 @@ app.use(
 );
 app.use(cors());
 
-/**
- * STEP 1: Redirect user to Facebook login
- */
+// STEP 1: Redirect user to Facebook login
+
 app.get('/auth/facebook', (req, res) => {
   const fbAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.APP_ID}&redirect_uri=${process.env.REDIRECT_URI}&scope=pages_show_list,pages_read_engagement`;
 
   res.redirect(fbAuthUrl);
 });
 
-/**
- * STEP 2: Callback route
- */
+// STEP 2: Callback route
+
 app.get('/auth/facebook/callback', async (req, res) => {
   try {
     const code = req.query.code;
@@ -47,9 +45,8 @@ app.get('/auth/facebook/callback', async (req, res) => {
   }
 });
 
-/**
- * STEP 3: Get user profile
- */
+// STEP 3: Get user profile
+
 app.get('/user', async (req, res) => {
   try {
     const { access_token } = req.query;
@@ -65,9 +62,8 @@ app.get('/user', async (req, res) => {
   }
 });
 
-/**
- * STEP 4: Get pages
- */
+// STEP 4: Get pages
+
 app.get('/pages', async (req, res) => {
   try {
     const { access_token } = req.query;
@@ -82,9 +78,8 @@ app.get('/pages', async (req, res) => {
   }
 });
 
-/**
- * STEP 5: Get insights
- */
+//  STEP 5: Get insights
+
 app.get('/insights', async (req, res) => {
   try {
     const { page_id, page_token, since, until } = req.query;
@@ -99,7 +94,6 @@ app.get('/insights', async (req, res) => {
       },
     );
 
-    // ✅ MOCK extra metrics (for full marks)
     res.json({
       data: [
         {

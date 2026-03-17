@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const API = 'https://fb-insights.onrender.com'; // ✅ FIXED
+const API = 'https://fb-insights.onrender.com';
 
 function App() {
   const [token, setToken] = useState('');
@@ -13,12 +13,10 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // ✅ Login
   const handleLogin = () => {
     window.location.href = `${API}/auth/facebook`;
   };
 
-  // ✅ Get token
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get('access_token');
@@ -29,7 +27,6 @@ function App() {
     }
   }, []);
 
-  // ✅ Fetch user + pages
   useEffect(() => {
     if (token) {
       axios
@@ -44,7 +41,6 @@ function App() {
     }
   }, [token]);
 
-  // ✅ Fetch insights (WITH since & until)
   const getInsights = async () => {
     if (!selectedPage) {
       setError('Please select a page');
@@ -105,7 +101,7 @@ function App() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <h1>📊 Facebook Insights Dashboard</h1>
+      <h1> Facebook Insights Dashboard</h1>
 
       {!token && (
         <button onClick={handleLogin} style={btn}>
